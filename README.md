@@ -35,9 +35,5 @@ https://study-flow-one.vercel.app/
 8. 💾 Persistent Storage: All your data (tasks, goals, notes) is automatically saved locally using localStorage.
 
 9. 📱 Responsive Design: Flawless layout on every device—desktop, tablet, and mobile.
-## Screenshots
-
-![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
-
 
 
