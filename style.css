@@ -1,0 +1,684 @@
+/* ----------------------- */
+/* 1. CSS VARIABLES (THEMING) */
+/* ----------------------- */
+:root {
+    /* Light Theme Defaults (Accent color is Amethyst Purple) */
+    --bg-primary: #f4f6f9; /* Light Gray Background */
+    --bg-secondary: #ffffff; /* White Card/Panel Background */
+    --text-primary: #2c3e50; /* Dark Blue Text */
+    --text-secondary: #7f8c8d; /* Muted Gray Text */
+    --accent-main: #9b59b6; /* Amethyst Purple Accent */
+    --accent-hover: #8e44ad;
+    --border-color: #ecf0f1; /* Light Border */
+    --shadow-color: rgba(0, 0, 0, 0.08);
+    --task-complete: #d4edda;
+    --task-pending: #f8d7da;
+    --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    /* Priority Colors */
+    --priority-high: #e74c3c; /* Red */
+    --priority-medium: #f39c12; /* Orange */
+    --priority-low: #3498db; /* Blue */
+}
+
+[data-theme="dark"] {
+    /* Dark Theme Colors */
+    --bg-primary: #121212; /* Deep Dark Background */
+    --bg-secondary: #1e1e1e; /* Darker Card/Panel Background */
+    --text-primary: #e0e0e0; /* Light Gray Text */
+    --text-secondary: #9e9e9e; /* Muted Light Text */
+    --accent-main: #3498db; /* Peter River Blue Accent */
+    --accent-hover: #2980b9;
+    --border-color: #333333; /* Dark Border */
+    --shadow-color: rgba(255, 255, 255, 0.08);
+    --task-complete: #2c3e50; /* Darker Green Tone */
+    --task-pending: #402c33; /* Darker Red Tone */
+    --priority-high: #c0392b; 
+    --priority-medium: #d35400; 
+    --priority-low: #2980b9;
+}
+
+/* ----------------------- */
+/* 2. BASE STYLES & RESETS */
+/* ----------------------- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: var(--font-family);
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    line-height: 1.6;
+    transition: background-color 0.3s, color 0.3s;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3 {
+    color: var(--accent-main);
+    margin-bottom: 0.5rem;
+}
+
+/* ----------------------- */
+/* 3. NAVIGATION */
+/* ----------------------- */
+#navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    background-color: var(--bg-secondary);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 4px var(--shadow-color);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-main);
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--text-primary);
+    font-weight: 500;
+    padding: 0.5rem 0;
+    transition: color 0.3s, border-bottom 0.3s;
+    position: relative;
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 0;
+    height: 2px;
+    background-color: var(--accent-main);
+    transition: width 0.3s;
+}
+
+.nav-links a:hover, .nav-links a.active {
+    color: var(--accent-main);
+}
+
+.nav-links a.active::after {
+    width: 100%;
+}
+
+/* Theme Toggle Switch */
+.theme-switch {
+    width: 48px;
+    height: 24px;
+    background-color: var(--border-color);
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.theme-switch::before {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 20px;
+    height: 20px;
+    background-color: var(--bg-secondary);
+    border-radius: 50%;
+    transition: transform 0.3s, background-color 0.3s;
+}
+
+/* Sun/Moon Icon placement */
+.theme-switch::after {
+    content: '☀️'; /* Sun icon for light mode */
+    position: absolute;
+    top: 50%;
+    left: 5px; 
+    transform: translateY(-50%);
+    font-size: 0.8rem;
+    opacity: 0.8;
+    transition: opacity 0.3s;
+}
+
+[data-theme="dark"] .theme-switch {
+    background-color: var(--accent-main);
+}
+
+[data-theme="dark"] .theme-switch::after {
+    content: '🌙'; /* Moon icon for dark mode */
+    left: auto;
+    right: 5px; 
+}
+
+[data-theme="dark"] .theme-switch::before {
+    transform: translateX(24px);
+    background-color: var(--text-primary);
+}
+
+/* Mobile Menu Button */
+.menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--text-primary);
+}
+
+/* ----------------------- */
+/* 4. MAIN LAYOUT & SECTIONS */
+/* ----------------------- */
+main {
+    flex-grow: 1;
+    padding: 2rem 5%;
+    max-width: 1400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.content-section {
+    display: none;
+    padding: 2rem 0;
+    animation: fadeIn 0.5s ease-out;
+}
+
+.content-section.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Card and Panel Styles */
+.card {
+    background-color: var(--bg-secondary);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px var(--shadow-color);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border: 1px solid var(--border-color);
+}
+
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Form Elements */
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input, select, textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-main);
+    box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.2); /* Using accent purple shadow */
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.1s, opacity 0.3s;
+}
+
+.btn-primary {
+    background-color: var(--accent-main);
+    color: var(--bg-secondary);
+}
+
+.btn-secondary {
+    background-color: var(--text-secondary);
+    color: var(--bg-secondary);
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* ----------------------- */
+/* 5. HOMEPAGE DASHBOARD */
+/* ----------------------- */
+#hero {
+    text-align: center;
+    padding: 3rem 0;
+    background: linear-gradient(135deg, var(--bg-secondary), var(--bg-primary));
+    border-radius: 12px;
+    margin-bottom: 2rem;
+}
+
+#hero h1 {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+#hero p {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.quick-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    flex-wrap: wrap; /* Added for responsiveness */
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 1.1rem;
+    color: var(--text-primary);
+    padding: 0.5rem 1rem;
+}
+
+.stat-value {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--accent-main);
+    margin-bottom: 0.25rem;
+}
+
+/* ----------------------- */
+/* 6. TASK PLANNER */
+/* ----------------------- */
+#task-list-container {
+    margin-top: 1.5rem;
+}
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.task-controls {
+    display: flex;
+    gap: 1rem;
+}
+
+.task-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    border-radius: 8px;
+    /* Border color now dynamically set by JS based on priority for pending tasks */
+    border-left: 5px solid var(--accent-main); 
+    background-color: var(--bg-secondary);
+    box-shadow: 0 1px 3px var(--shadow-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.task-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--shadow-color);
+}
+
+.task-info {
+    flex-grow: 1;
+}
+
+.task-priority-indicator {
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    margin-right: 1rem;
+    color: var(--bg-secondary);
+}
+
+.priority-high { background-color: var(--priority-high); }
+.priority-medium { background-color: var(--priority-medium); }
+.priority-low { background-color: var(--priority-low); }
+
+
+.task-title {
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 0.2rem;
+}
+
+.task-details {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+.task-actions button {
+    margin-left: 0.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    font-size: 1.2rem;
+    transition: color 0.3s;
+}
+
+.task-actions button:hover {
+    color: var(--accent-main);
+}
+
+/* Specific status styling for completed tasks */
+.task-status-completed {
+    border-left-color: var(--accent-main) !important; 
+    background-color: var(--task-complete);
+    opacity: 0.8;
+}
+
+.task-status-completed .task-title {
+    text-decoration: line-through;
+    color: var(--text-secondary);
+}
+
+/* ----------------------- */
+/* 7. CALENDAR */
+/* ----------------------- */
+#calendar-view {
+    text-align: center;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.calendar-grid {
+    /* Critical fix: ensures 7 equal columns for alignment */
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    font-weight: 500;
+}
+
+.calendar-day-header {
+    color: var(--text-secondary);
+    padding: 0.5rem 0;
+    font-weight: 600;
+}
+
+.calendar-day {
+    padding: 0.75rem 0.25rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    position: relative;
+    font-weight: 400;
+}
+
+.calendar-day:not(.empty-day):hover {
+    background-color: var(--border-color);
+}
+
+.calendar-day.current-day {
+    border: 2px solid var(--accent-main);
+}
+
+.calendar-day.has-task {
+    background-color: var(--accent-main);
+    color: var(--bg-secondary);
+    font-weight: 600;
+}
+
+.calendar-day.has-task:hover {
+    background-color: var(--accent-hover);
+}
+
+.empty-day {
+    visibility: hidden;
+}
+
+#calendar-task-list {
+    margin-top: 1.5rem;
+    text-align: left;
+}
+
+/* ----------------------- */
+/* 8. PROGRESS & GOALS */
+/* ----------------------- */
+.progress-bar-container {
+    background-color: var(--border-color);
+    border-radius: 8px;
+    height: 12px;
+    margin-top: 0.5rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent-main);
+    transition: width 0.5s ease-in-out;
+    border-radius: 8px;
+}
+
+.goal-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.goal-item:last-child {
+    border-bottom: none;
+}
+
+/* ----------------------- */
+/* 9. POMODORO TIMER */
+/* ----------------------- */
+#pomodoro-timer {
+    text-align: center;
+    /* background-color set by JS based on mode */
+    color: #fff;
+    padding: 3rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    /* Fallback color, will be immediately overwritten */
+    background-color: var(--accent-main);
+}
+
+#timer-display {
+    font-size: 5rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-variant-numeric: tabular-nums; /* Ensures fixed width for digits */
+}
+
+.timer-controls button {
+    background-color: rgba(255, 255, 255, 0.9);
+    color: var(--text-primary);
+    margin: 0 0.5rem;
+    padding: 0.75rem 1.25rem;
+    font-size: 1.1rem;
+    border-radius: 50px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.timer-controls button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* ----------------------- */
+/* 10. FOOTER */
+/* ----------------------- */
+footer {
+    margin-top: auto; /* Push footer to the bottom */
+    padding: 1.5rem 5%;
+    background-color: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    text-align: center;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+footer a {
+    color: var(--accent-main);
+    text-decoration: none;
+}
+
+.footer-quote {
+    margin-bottom: 0.75rem;
+    font-style: italic;
+}
+
+/* ----------------------- */
+/* 11. MODAL/REMINDER BOX */
+/* ----------------------- */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: none; /* Hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 12px;
+    max-width: 400px;
+    width: 90%;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(-20px);
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.modal-overlay.active .modal-content {
+    transform: translateY(0);
+}
+
+.modal-content h3 {
+    color: var(--accent-main);
+    margin-bottom: 1rem;
+}
+
+/* ----------------------- */
+/* 12. RESPONSIVE DESIGN */
+/* ----------------------- */
+@media (max-width: 1024px) {
+    .grid-layout {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 768px) {
+    /* Mobile Navigation */
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 60px; /* Below navbar */
+        left: 0;
+        width: 100%;
+        background-color: var(--bg-secondary);
+        box-shadow: 0 4px 8px var(--shadow-color);
+        padding: 1rem 5%;
+        gap: 1rem;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+    }
+
+    .nav-links.open {
+        display: flex;
+    }
+
+    .menu-toggle {
+        display: block;
+    }
+
+    #navbar {
+        padding: 1rem;
+    }
+
+    main {
+        padding: 1rem;
+    }
+
+    #hero h1 {
+        font-size: 2rem;
+    }
+
+    #timer-display {
+        font-size: 4rem;
+    }
+
+    .quick-stats {
+        flex-direction: column;
+    }
+
+    .task-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+
+    .task-actions {
+        margin-top: 0.5rem;
+    }
+}

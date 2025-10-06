@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner</title>
+    <!-- Link to external CSS stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body data-theme="light">
+    <!-- Navbar -->
+    <header id="navbar">
+        <a href="#" class="logo">StudyFlow</a>
+        <nav class="nav-links">
+            <a href="#dashboard" class="nav-link active" data-section="dashboard">Dashboard</a>
+            <a href="#planner" class="nav-link" data-section="planner">Planner</a>
+            <a href="#calendar-view" class="nav-link" data-section="calendar-view">Calendar</a>
+            <a href="#progress-goals" class="nav-link" data-section="progress-goals">Progress</a>
+            <a href="#pomodoro" class="nav-link" data-section="pomodoro">Pomodoro</a>
+            <a href="#notes" class="nav-link" data-section="notes">Notes</a>
+            <a href="#settings" class="nav-link" data-section="settings">Settings</a>
+        </nav>
+        <div class="theme-switch" id="theme-toggle" title="Toggle Light/Dark Mode"></div>
+        <div class="menu-toggle" id="menu-toggle">☰</div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- 1. Dashboard Section -->
+        <section id="dashboard" class="content-section active">
+            <div id="hero">
+                <h1 id="welcome-message">Welcome Back, Student!</h1>
+                <p>Plan your day and crush your goals. You got this!</p>
+                <div class="quick-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-pending-tasks">0</span>
+                        <span class="stat-label">Pending Tasks</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-current-date">--</span>
+                        <span class="stat-label">Today's Date</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-current-time">--</span>
+                        <span class="stat-label">Current Time</span>
+                    </div>
+                    <!-- Daily Streak Stat -->
+                    <div class="stat-item">
+                        <span class="stat-value" id="stat-streak">0 🔥</span>
+                        <span class="stat-label">Daily Streak</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid-layout">
+                <!-- Quick Actions Card -->
+                <div class="card">
+                    <h2>Quick Actions</h2>
+                    <p>Start your study session or add a new task.</p>
+                    <button class="btn btn-primary" onclick="showSection('pomodoro')">Start Pomodoro</button>
+                    <button class="btn btn-secondary" onclick="showSection('planner')">Add New Task</button>
+                    
+                    <h2 style="margin-top: 1.5rem;">Motivation</h2>
+                    <!-- Dynamic motivation message based on streak -->
+                    <p id="motivation-message" style="color: var(--text-secondary);"></p> 
+                </div>
+                <div class="card">
+                    <h2>Reminders</h2>
+                    <p id="reminder-display">No urgent tasks today. Stay ahead!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. Task/Study Schedule Planner -->
+        <section id="planner" class="content-section">
+            <h2 class="section-title">Task Schedule Planner</h2>
+            
+            <!-- Task Form -->
+            <div class="card">
+                <h3>Add/Edit Task</h3>
+                <form id="task-form">
+                    <input type="hidden" id="task-id">
+                    <label for="title">Task Title</label>
+                    <input type="text" id="title" required placeholder="e.g., Chapter 5 Review">
+
+                    <div class="grid-layout" style="grid-template-columns: 1fr 1fr 1fr;">
+                        <div>
+                            <label for="subject">Subject</label>
+                            <select id="subject" required>
+                                <option value="" disabled selected>Select Subject</option>
+                                <option value="Math">Math</option>
+                                <option value="Science">Science</option>
+                                <option value="History">History</option>
+                                <option value="English">English</option>
+                                <option value="Programming">Programming</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="category">Category</label>
+                            <select id="category" required>
+                                <option value="" disabled selected>Select Category</option>
+                                <option value="Assignment">Assignment</option>
+                                <option value="Reading">Reading</option>
+                                <option value="Exam Prep">Exam Prep</option>
+                                <option value="Review">Review</option>
+                            </select>
+                        </div>
+                        <!-- NEW: Priority Dropdown -->
+                        <div>
+                            <label for="priority">Priority</label>
+                            <select id="priority" required>
+                                <option value="Low">Low</option>
+                                <option value="Medium" selected>Medium</option>
+                                <option value="High">High</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <label for="deadline">Deadline</label>
+                    <input type="date" id="deadline" required>
+
+                    <button type="submit" class="btn btn-primary" id="task-submit-btn">Add Task</button>
+                    <button type="button" class="btn btn-secondary" id="task-cancel-btn" style="display:none;">Cancel Edit</button>
+                </form>
+            </div>
+
+            <!-- Task List -->
+            <div class="card" id="task-list-container">
+                <div class="task-header">
+                    <h3>My Tasks (<span id="total-tasks-count">0</span>)</h3>
+                    <div class="task-controls">
+                        <input type="text" id="task-search" placeholder="Search by subject...">
+                        <select id="task-filter">
+                            <option value="all">All Tasks</option>
+                            <option value="pending">Pending</option>
+                            <option value="completed">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="tasks-list">
+                    <!-- Tasks will be rendered here. -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Calendar Integration -->
+        <section id="calendar-view" class="content-section">
+            <h2 class="section-title">Task Calendar</h2>
+            <div class="card">
+                <div class="calendar-header">
+                    <button class="btn btn-secondary" onclick="changeMonth(-1)">&#9664; Prev</button>
+                    <h3 id="current-month-year">Month Year</h3>
+                    <button class="btn btn-secondary" onclick="changeMonth(1)">Next &#9654;</button>
+                </div>
+                <!-- Calendar Weekday Headers -->
+                <div class="calendar-grid"> 
+                    <div class="calendar-day-header">Sun</div>
+                    <div class="calendar-day-header">Mon</div>
+                    <div class="calendar-day-header">Tue</div>
+                    <div class="calendar-day-header">Wed</div>
+                    <div class="calendar-day-header">Thu</div>
+                    <div class="calendar-day-header">Fri</div>
+                    <div class="calendar-day-header">Sat</div>
+                </div>
+                <!-- Calendar Days Container -->
+                <div id="calendar-days" class="calendar-grid"></div> 
+            </div>
+            
+            <div class="card" id="calendar-task-list">
+                <h3>Tasks for Selected Date: <span id="selected-date-display">Today</span></h3>
+                <div id="tasks-for-date">
+                    <p style="text-align: center; color: var(--text-secondary);">Select a date to see tasks.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Progress Tracker & Goal Setting -->
+        <section id="progress-goals" class="content-section">
+            <h2 class="section-title">Progress & Goal Tracker</h2>
+
+            <div class="grid-layout">
+                <!-- Overall Progress -->
+                <div class="card">
+                    <h3>Overall Task Completion</h3>
+                    <p id="progress-text">0% Completed (0 of 0 tasks)</p>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar" id="overall-progress-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+                
+                <!-- Subject Goals -->
+                <div class="card">
+                    <h3>Subject Study Goals (Hrs)</h3>
+                    <form id="goal-form">
+                        <div style="display: flex; gap: 1rem; align-items: flex-end;">
+                            <div style="flex-grow: 1;">
+                                <label for="goal-subject">Subject</label>
+                                <select id="goal-subject" required>
+                                    <option value="" disabled selected>Select Subject</option>
+                                    <option value="Math">Math</option>
+                                    <option value="Science">Science</option>
+                                    <option value="History">History</option>
+                                    <option value="Programming">Programming</option>
+                                </select>
+                            </div>
+                            <div style="width: 150px;">
+                                <label for="goal-hours">Goal (Hrs)</label>
+                                <input type="number" id="goal-hours" min="1" required value="10">
+                            </div>
+                            <button type="submit" class="btn btn-primary" style="flex-shrink: 0;">Set Goal</button>
+                        </div>
+                    </form>
+                    
+                    <div id="goals-list" style="margin-top: 1rem;">
+                        <p style="text-align: center; color: var(--text-secondary);">Set a goal above to track it.</p>
+                        <!-- Goals rendered here -->
+                    </div>
+                    
+                    <!-- Dummy Log Input (for demonstration) -->
+                    <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                        <small style="color: var(--text-secondary);">Mock Log: For a real app, you'd track time automatically. Click to simulate 2 hours logged.</small>
+                        <button class="btn btn-secondary" onclick="mockLogProgress('Math', 2)">Log 2 Hrs for Math</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Pomodoro Timer -->
+        <section id="pomodoro" class="content-section">
+            <h2 class="section-title">Pomodoro Timer</h2>
+            <div id="pomodoro-timer">
+                <h3 id="timer-mode">Study Time</h3>
+                <div id="timer-display">25:00</div>
+                <div class="timer-controls">
+                    <button id="start-btn">Start</button>
+                    <button id="pause-btn" style="display:none;">Pause</button>
+                    <button id="reset-btn">Reset</button>
+                </div>
+                <div style="margin-top: 1.5rem; font-size: 0.9rem;">
+                    <button class="btn btn-secondary" onclick="setPomodoroMode('study')">Study (25)</button>
+                    <button class="btn btn-secondary" onclick="setPomodoroMode('short')">Short Break (5)</button>
+                    <button class="btn btn-secondary" onclick="setPomodoroMode('long')">Long Break (15)</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Notes Section -->
+        <section id="notes" class="content-section">
+            <h2 class="section-title">Quick Notes</h2>
+            <div class="card" style="min-height: 400px;">
+                <textarea id="notes-textarea" rows="15" placeholder="Jot down quick ideas, concepts, or things to remember here. Notes are saved automatically." oninput="saveNotes()"></textarea>
+            </div>
+        </section>
+        
+        <!-- 7. Settings Section (UPDATED) -->
+        <section id="settings" class="content-section">
+            <h2 class="section-title">User Settings & Profile</h2>
+            <div class="card">
+                <h3>Personalization</h3>
+                <p>Customize your planner's look and feel.</p>
+                
+                <label for="user-name-input" style="font-size: 0.9rem;">Your Name</label>
+                <div style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+                    <input type="text" id="user-name-input" placeholder="Enter your name">
+                    <button class="btn btn-primary" onclick="saveSettings('name')" style="flex-shrink: 0;">Save</button>
+                </div>
+
+                <h3 style="margin-top: 2rem;">Academic Profile</h3>
+                <p style="color: var(--text-secondary);">This information can be used to tailor future features.</p>
+                
+                <label for="student-major">Major/Program</label>
+                <input type="text" id="student-major" placeholder="e.g., Computer Science">
+                
+                <label for="student-level">Academic Level</label>
+                <select id="student-level">
+                    <option value="undergrad">Undergraduate</option>
+                    <option value="postgrad">Postgraduate</option>
+                    <option value="highschool">High School</option>
+                    <option value="other">Other</option>
+                </select>
+                
+                <button class="btn btn-primary" onclick="saveSettings('profile')" style="margin-top: 0.5rem;">Save Profile Details</button>
+            </div>
+        </section>
+
+
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p class="footer-quote">"The beautiful thing about learning is that no one can take it away from you." - B.B. King</p>
+        <p>&copy; 2025 StudyFlow Smart Planner. All rights reserved.</p>
+    </footer>
+
+    <!-- Custom Modal/Reminder Box -->
+    <div id="message-modal-overlay" class="modal-overlay">
+        <div class="modal-content">
+            <h3 id="modal-title">Notification</h3>
+            <p id="modal-body">This is a custom message.</p>
+            <button class="btn btn-primary" onclick="closeModal()" style="margin-top: 1rem; width: 100%;">Got It</button>
+        </div>
+    </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="script.js"></script>
+</body>
+</html>
