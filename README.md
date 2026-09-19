@@ -366,13 +366,7 @@ studyflow/
 │   ├── schema.sql              # MySQL DDL with foreign keys & indexes
 │   └── seed.sql                # Seed data for local testing
 │
-├── docs/                       # Architecture & documentation specifications
-│   ├── 00_MASTER DOCUMENTATION.md
-│   ├── 01_PRD.md               # Product Requirements Document
-│   ├── 02_TRD.md               # Technical Requirements Document
-│   ├── 03_APP-FLOW.md          # User journeys & routing maps
-│   ├── 04_UI_UX_DESIGN_SYSTEM.md
-│   ├── StudyFlow_Auth_API.postman_collection.json # Ready-to-use Postman collection
+├── docs/                       
 │   └── screenshots/            # Repository visual assets
 │
 ├── docker-compose.yml          # Container configuration for MySQL 8
