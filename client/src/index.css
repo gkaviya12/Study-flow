@@ -1,0 +1,355 @@
+/* StudyFlow V2 — Aurora Sage Design System
+ *
+ * All brand colors are CSS variables so the Light/Dark toggle swaps
+ * the entire UI instantly with zero rebuild.
+ *
+ * Token rules (from design doc §3):
+ *   - Sage / Mint / Gold stay as backgrounds, icons, borders — NOT as text.
+ *   - Heading text: Forest Green (#2F5D50 in light, Soft Mint in dark)
+ *   - Body text: Slate (#334155 in light, Fog in dark)
+ *   - Secondary text: Slate Muted (#64748B in light, Muted Fog in dark)
+ *
+ * Tailwind extended values are in tailwind.config.js — CSS variables are
+ * the authoritative source of truth for theming.
+ */
+
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── CSS Custom Properties ── */
+
+:root {
+  /* Warm Espresso / Paper — Light mode (cozy library parchment) */
+  --bg-primary:       #FDFBF7;
+  --bg-card:          #FFFFFF;
+  --bg-nav:           #FFFFFF;
+  --bg-glass:         rgba(253, 251, 247, 0.85);
+
+  /* Primary Button and Core Brand Colors (Warm Espresso) */
+  --color-primary:       #2A1D17;
+  --color-primary-hover: #433026;
+  --color-primary-text:  #FDFBF7;
+
+  --color-accent:        #C27038;
+  --color-accent-hover:  #A7581B;
+
+  /* Aliases — warm espresso, caramel amber, and cream (no green) */
+  --color-sage:          #C27038;  /* warm roasted caramel amber */
+  --color-sage-hover:    #A7581B;
+  --color-mint:          #DFCDBE;  /* warm latte cream */
+  --color-soft-mint:     #F5EEE6;  /* soft warm parchment */
+  --color-forest:        #2A1D17;  /* deep roasted espresso */
+  --color-cream:         #FDFBF7;
+
+  --color-heading:       #2A1D17;
+  --color-body:          #453932;
+  --color-secondary:     #7C6E65;
+
+  --color-gold:          #D97706;
+  --color-coral:         #E05D52;
+  --color-blush:         #F4A79D;
+  --color-sky:           #5B8FB9;
+
+  --border-color:        #EAE2D7;
+  --border-input:        #DFD5C8;
+
+  --shadow-card:         0 4px 20px rgba(42, 29, 23, 0.06);
+  --shadow-nav:          0 1px 4px rgba(42, 29, 23, 0.05);
+
+  /* Lumi colors — cozy coffeehouse mascot */
+  --lumi-body:           #FAF6F0;
+  --lumi-hoodie:         #8D5B3A;  /* cozy roasted mocha hoodie */
+  --lumi-leaf:           #DDA16E;  /* warm golden sprout */
+  --lumi-cheeks:         #F4A79D;
+
+  /* Semantic tokens */
+  --color-success:       #C27038;
+  --color-warning:       #D97706;
+  --color-error:         #E05D52;
+  --color-info:          #5B8FB9;
+}
+
+[data-theme="dark"] {
+  /* Dark Chocolate & Deep Espresso Roast — Dark mode */
+  --bg-primary:       #15100E;
+  --bg-card:          #211A16;
+  --bg-nav:           #211A16;
+  --bg-glass:         rgba(33, 26, 22, 0.85);
+
+  /* Primary Button and Core Brand Colors in Dark (Parchment on Dark Roast) */
+  --color-primary:       #EFE5D8;
+  --color-primary-hover: #FFFFFF;
+  --color-primary-text:  #1E1512;
+
+  --color-accent:        #DDA16E;
+  --color-accent-hover:  #ECC099;
+
+  --color-sage:          #DDA16E;  /* warm honey amber */
+  --color-sage-hover:    #ECC099;
+  --color-mint:          #8C6549;  /* cocoa amber */
+  --color-soft-mint:     #2D221D;  /* warm dark roast */
+  --color-forest:        #F6F0EA;  /* warm cream foam */
+  --color-cream:         #15100E;
+
+  --color-heading:       #F6F0EA;
+  --color-body:          #D4C9C1;
+  --color-secondary:     #9C8E85;
+
+  --border-color:        #382C26;
+  --border-input:        #382C26;
+
+  --shadow-card:         0 4px 24px rgba(0, 0, 0, 0.50);
+  --shadow-nav:          0 1px 4px rgba(0, 0, 0, 0.40);
+
+  --lumi-body:           #2D221D;
+  --lumi-hoodie:         #A06846;
+  --lumi-leaf:           #E2AD7E;
+}
+
+/* ── Base resets ── */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body, div, nav, header, aside, section, main, article, button, input, select, textarea {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.15s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  color: var(--color-body);
+  background-color: var(--bg-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ── Typography ── */
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-heading);
+  font-weight: 700;
+  line-height: 1.25;
+  margin: 0;
+}
+
+h1 { font-size: 2rem; }   /* 32px */
+h2 { font-size: 1.5rem; } /* 24px */
+h3 { font-size: 1.25rem; }/* 20px */
+
+p { margin: 0; }
+
+/* ── Links ── */
+
+a {
+  color: var(--color-sage);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--color-sage-hover);
+}
+
+/* ── Focus indicators (accessibility) ── */
+
+:focus-visible {
+  outline: 2px solid var(--color-sage);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ── Scrollbar ── */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-mint);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-sage);
+}
+
+/* ── Button base ── */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border: none;
+  border-radius: 14px;
+  font-family: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.12s ease, box-shadow 0.15s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btn:hover {
+  transform: scale(0.98);
+}
+
+.btn:active {
+  transform: scale(0.96);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.btn-primary {
+  background-color: var(--color-primary);
+  color: var(--color-primary-text);
+  box-shadow: 0 2px 8px rgba(42, 29, 23, 0.12);
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  box-shadow: 0 4px 12px rgba(42, 29, 23, 0.20);
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: var(--color-body);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: var(--color-soft-mint);
+  border-color: var(--color-accent);
+}
+
+/* ── Input base ── */
+
+.input {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--border-input);
+  border-radius: 16px;
+  background-color: var(--bg-card);
+  color: var(--color-body);
+  font-family: inherit;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+  color: var(--color-secondary);
+  opacity: 0.7;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-sage);
+  box-shadow: 0 0 0 3px rgba(111, 175, 143, 0.15);
+}
+
+/* ── Card ── */
+
+.card {
+  background-color: var(--bg-card);
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-card);
+  padding: 1.5rem; /* 24px per design doc §5 */
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 30px rgba(111, 175, 143, 0.20);
+}
+
+/* ── Glassmorphism ── */
+
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* ── Lumi container (fixed, bottom-right) ── */
+
+.lumi-wrapper {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 999;
+  user-select: none;
+  cursor: grab;
+}
+
+.lumi-wrapper:active {
+  cursor: grabbing;
+}
+
+/* ── Animations ── */
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  40%       { transform: translateY(-10px); }
+  60%       { transform: translateY(-5px); }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+
+@keyframes blink {
+  0%, 90%, 100% { opacity: 1; }
+  95%            { opacity: 0; }
+}
+
+@keyframes celebrate {
+  0%   { transform: scale(1) rotate(0deg); }
+  25%  { transform: scale(1.2) rotate(-10deg); }
+  50%  { transform: scale(1.1) rotate(10deg); }
+  75%  { transform: scale(1.2) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* Apply motion-safe animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
